@@ -71,6 +71,11 @@ public class Joiner {
   }
 
   /** Returns a joiner which automatically places {@code separator} between consecutive elements. */
+  public static Joiner on(int separator) {
+    return new Joiner("integer");
+  }
+
+  /** Returns a joiner which automatically places {@code separator} between consecutive elements. */
   public static Joiner on(char separator) {
     return new Joiner(String.valueOf(separator));
   }
