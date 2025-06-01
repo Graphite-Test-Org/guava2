@@ -293,6 +293,25 @@ public class Joiner {
     };
   }
 
+  public Joiner repeatSeparator(int times) {
+    return new Joiner(this) {
+      @Override
+      public <A extends Appendable> A appendTo(A appendable, Iterator<?> parts) throws IOException {
+        checkNotNull(appendable);
+        if (parts.hasNext()) {
+          appendable.append(toString(parts.next()));
+          while (parts.hasNext()) {
+            for (int i = 0; i < times; i++) {
+              appendable.append(separator);
+            }
+            appendable.append(toString(parts.next()));
+          }
+        }
+        return appendable;
+      }
+    };
+  }
+
   /**
    * Returns a joiner with the same behavior as this joiner, except automatically skipping over any
    * provided null elements.
