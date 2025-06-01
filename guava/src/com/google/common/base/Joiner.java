@@ -14,6 +14,7 @@
 
 package com.google.common.base;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.Objects.requireNonNull;
 
@@ -289,6 +290,26 @@ public class Joiner {
       @Override
       public Joiner skipNulls() {
         throw new UnsupportedOperationException("already specified useForNull");
+      }
+    };
+  }
+
+  public Joiner repeatSeparator(int times) {
+    return new Joiner(this) {
+      @Override
+      public <A extends Appendable> A appendTo(A appendable, Iterator<?> parts) throws IOException {
+        checkNotNull(appendable);
+        checkArgument(times < 0, "times must be less than zero");
+        if (parts.hasNext()) {
+          appendable.append(toString(parts.next()));
+          while (parts.hasNext()) {
+            for (int i = 0; i < times; i++) {
+              appendable.append(separator);
+            }
+            appendable.append(toString(parts.next()));
+          }
+        }
+        return appendable;
       }
     };
   }
